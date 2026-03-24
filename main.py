@@ -17,7 +17,18 @@ def home():
 
 @app.post("/study")
 async def study(query: Query):
-    response = agent.invoke({"messages": [("user", query.question)]})
+    try:
+        response = agent.invoke({"messages": [("user", query.question)]})
+        response_str = str(response)
 
-    
-    return {"response": response}
+        
+        save_interaction(
+            query.user_id,
+            query.question,
+            response_str
+        )
+        
+
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
