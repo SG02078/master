@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from agent import create_agent
-#from db import save_interaction
+from db import save_interaction
 
 app = FastAPI()
 
@@ -17,7 +17,7 @@ def home():
 
 @app.post("/study")
 async def study(query: Query):
-    response = agent.run(query.question)
+    response = agent.invoke({"messages": [("user", query.question)]})
 
     
     return {"response": response}
